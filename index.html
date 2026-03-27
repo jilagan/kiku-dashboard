@@ -176,6 +176,7 @@
 <script>
 const STATS_URL = 'https://fltusorahxjvsdjaspgy.supabase.co/functions/v1/kiku-dashboard';
 const AUTH_USER = 'kiku';
+const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZsdHVzb3JhaHhqdnNkamFzcGd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMwNjQ4MzIsImV4cCI6MjA4ODY0MDgzMn0.XW5PMS9F3qsW4hrx6vdO6mev3RTvZALU5Zihn58zQKA';
 
 let actChart, scoreChart;
 
@@ -351,7 +352,7 @@ async function load() {
   const auth = getAuthHeader();
   if (!auth) { showLogin(); return; }
   try {
-    const r = await fetch(STATS_URL, { headers: { 'Authorization': auth } });
+    const r = await fetch(STATS_URL, { headers: { 'Authorization': auth, 'apikey': ANON_KEY } });
     if (r.status === 401) { localStorage.removeItem('kiku_dash_pass'); showLogin(); return; }
     if (!r.ok) throw new Error('HTTP ' + r.status);
     document.getElementById('error').style.display = 'none';
@@ -367,7 +368,7 @@ async function tryLogin() {
   if (!pass) return;
   const auth = 'Basic ' + btoa(AUTH_USER + ':' + pass);
   try {
-    const r = await fetch(STATS_URL, { headers: { 'Authorization': auth } });
+    const r = await fetch(STATS_URL, { headers: { 'Authorization': auth, 'apikey': ANON_KEY } });
     if (r.status === 401) { document.getElementById('login-err').style.display = 'block'; return; }
     if (!r.ok) throw new Error('HTTP ' + r.status);
     localStorage.setItem('kiku_dash_pass', pass);
